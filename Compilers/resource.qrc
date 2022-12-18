@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/rec">
+        <file>icons/document_new.png</file>
+        <file>icons/document_open.png</file>
+    </qresource>
+</RCC>
