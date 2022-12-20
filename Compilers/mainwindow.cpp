@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
 }
 
 MainWindow::~MainWindow()
@@ -90,7 +91,7 @@ void MainWindow::draw(Node* tree) {
     char * y= &dotLang[0];
     G = agmemread(y);
     gvLayout (gvc, G, "dot");
-    QString path = QCoreApplication::applicationDirPath()+"/parse_tree.png";
+    QString path = QDir::currentPath()+"/parse_tree.png";
     QByteArray ba = path.toLocal8Bit();
     const char *c_str2 = ba.data();
     qDebug() << path;
@@ -101,7 +102,7 @@ void MainWindow::draw(Node* tree) {
 }
 void MainWindow::on_actionOpen_triggered()
 {
-    QString file_name = QFileDialog::getOpenFileName(this,"Open the file","C:/Users/Dell/Documents/Compilers",tr("text files (*.txt)"));
+    QString file_name = QFileDialog::getOpenFileName(this,"Open the file","",tr("text files (*.txt)"));
     QFile file(file_name);
     if(!file.open(QFile::ReadOnly | QFile::Text)){
         QMessageBox::warning(this,"Error","file not open");
@@ -112,6 +113,7 @@ void MainWindow::on_actionOpen_triggered()
     QString text=in.readAll();
     ui->input->setPlainText(text);
     file.close();
+
 }
 
 
@@ -140,8 +142,39 @@ void MainWindow::on_scanButton_clicked()
 void MainWindow::on_parseButton_clicked()
 {
     string input = ui->input->toPlainText().toStdString();
-    queue<Token>* result = scanning(input);
-}
+    //queue<Token>* result = scanning(input);
+
+//    queue<Token> input =scanFile(openFile.toStdString());
+//    if (!input.empty() && input.front().type == "Error") {
+//        QMessageBox::warning(this,"Error",QString::fromStdString(input.front().value));
+//        return;
+//    }
+    Node* root = program(input);
+//    QFile file("Scanner_Output.txt");
+//    if(!file.open(QFile::ReadOnly | QFile::Text)){
+//         QMessageBox::warning(this,"Error","File not open");
+//    }
+//    else{
+//        QTextStream out(&file);
+        if(root->child.size()){
+            draw(root);
+//            treePNG pngPhoto;
+//            pngPhoto.setModal(true);
+//            pngPhoto.exec();
+
+            QString path = QDir::currentPath()+"/parse_tree.png";
+            QByteArray ba = path.toLocal8Bit();
+            const char *c_str2 = ba.data();
+            QPixmap *myPixMap = new QPixmap(c_str2);
+            ui->tree->setPixmap(*myPixMap);
+            ui->tree->setScaledContents(true);
+            ui->tree->show();
+        }
+        else{
+            QMessageBox::warning(this,"Error",QString::fromStdString(root->key.value));
+        }
+    }
+
 
 
 
