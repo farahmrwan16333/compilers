@@ -142,7 +142,7 @@ queue<Token>* scanning(string &in_string) {
 
         }
     }
-    return scanned;
+    return &scanned;
 }
 
 

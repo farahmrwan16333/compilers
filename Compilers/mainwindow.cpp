@@ -4,6 +4,10 @@
 #include <QFileDialog>
 #include <QTextStream>
 #include <QMessageBox>
+#include <string>
+#include "Parse.h"
+#include "Scan.h"
+#include "Tree.h"
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -49,8 +53,17 @@ void MainWindow::on_resetButton_clicked()
 
 
 void MainWindow::on_scanButton_clicked()
-{
 
+{
+    string input = ui->input->toPlainText().toStdString();
+    queue<Token>* result = scanning(input);
+    string output="";
+    while (!(result->empty())) {
+           output += result->front().type + "\t" + result->front().value + "\n";
+           result->pop();
+
+       }
+    ui->output->setPlainText(QString::fromStdString(output));
 }
 
 
