@@ -119,8 +119,9 @@ void MainWindow::on_actionOpen_triggered()
 
 void MainWindow::on_resetButton_clicked()
 {
-    ui->input->setText("");
-    ui->output->setText("");
+    ui->input->clear();
+    ui->output->clear();
+    ui->tree->clear();
 }
 
 
@@ -158,9 +159,6 @@ void MainWindow::on_parseButton_clicked()
 //        QTextStream out(&file);
         if(root->child.size()){
             draw(root);
-//            treePNG pngPhoto;
-//            pngPhoto.setModal(true);
-//            pngPhoto.exec();
 
             QString path = QDir::currentPath()+"/parse_tree.png";
             QByteArray ba = path.toLocal8Bit();
@@ -171,7 +169,7 @@ void MainWindow::on_parseButton_clicked()
             ui->tree->show();
         }
         else{
-            QMessageBox::warning(this,"Error",QString::fromStdString(root->key.value));
+            QMessageBox::warning(this,"Error","Syntax Error");
         }
     }
 
