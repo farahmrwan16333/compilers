@@ -12,6 +12,7 @@ struct Token
 {
     string type;
     string value;
+    int id;
 };
 
 queue<Token>* scanning(string& in_string);

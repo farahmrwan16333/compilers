@@ -29,5 +29,16 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
+
+#include "gvc.h"
+#include "cdt.h"
+#include "cgraph.h"
+GRAPHVIZ_PATH = "C:/Program Files/Graphviz/"
+DEFINES += WIN32_DLL
+DEFINES += GVDLL
+INCLUDEPATH += $$GRAPHVIZ_PATH/include/graphviz
+LIBS += -L$$GRAPHVIZ_PATH/lib -lgvc -lcgraph  -lcdt
+LIBS += -L$$GRAPHVIZ_PATH/bin -lgvc -lcgraph  -lcdt
+
 RESOURCES += \
     resource.qrc

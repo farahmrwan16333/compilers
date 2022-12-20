@@ -2,6 +2,20 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QFileDialog>
+#include <string>
+#include <QString>
+#include <QDir>
+#include <QFile>
+#include <QFileDialog>
+#include <QTextStream>
+#include <QMessageBox>
+#include <QDebug>
+#include "Parse.h"
+#include "Scan.h"
+#include "gvc.h"
+#include "cdt.h"
+#include "cgraph.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -13,7 +27,9 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+        ~MainWindow();
+        int drawNode(Node* node, string &str, int id);
+        void draw(Node* tree);
 
 private slots:
     void on_actionNew_triggered();
