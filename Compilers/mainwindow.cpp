@@ -124,10 +124,11 @@ void MainWindow::on_resetButton_clicked()
     ui->tree->clear();
 }
 
-
+ string output="";
 void MainWindow::on_scanButton_clicked()
 
 {
+     ui->output->clear();
     string input = ui->input->toPlainText().toStdString();
     queue<Token>* result = scanning(input);
     string output="";
@@ -137,29 +138,24 @@ void MainWindow::on_scanButton_clicked()
 
        }
     ui->output->setPlainText(QString::fromStdString(output));
+    output ="";
 }
 
 
 void MainWindow::on_parseButton_clicked()
 {
     string input = ui->input->toPlainText().toStdString();
-    //queue<Token>* result = scanning(input);
+    queue<Token>* result = scanning(input);
 
-//    queue<Token> input =scanFile(openFile.toStdString());
-//    if (!input.empty() && input.front().type == "Error") {
-//        QMessageBox::warning(this,"Error",QString::fromStdString(input.front().value));
-//        return;
-//    }
-    Node* root = program(input);
-//    QFile file("Scanner_Output.txt");
-//    if(!file.open(QFile::ReadOnly | QFile::Text)){
-//         QMessageBox::warning(this,"Error","File not open");
-//    }
-//    else{
-//        QTextStream out(&file);
+    if (!result->empty() && result->front().type == "Error") {
+        QMessageBox::warning(this,"Error","Syntax Error");
+        return;
+
+    }
+
+    Node* root = program(result);
         if(root->child.size()){
             draw(root);
-
             QString path = QDir::currentPath()+"/parse_tree.png";
             QByteArray ba = path.toLocal8Bit();
             const char *c_str2 = ba.data();
@@ -167,9 +163,13 @@ void MainWindow::on_parseButton_clicked()
             ui->tree->setPixmap(*myPixMap);
             ui->tree->setScaledContents(true);
             ui->tree->show();
+            delete root;
+
         }
         else{
             QMessageBox::warning(this,"Error","Syntax Error");
+
+            delete root;
         }
     }
 

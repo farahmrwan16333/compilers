@@ -1,7 +1,7 @@
 #include "Tree.h"
 
 
-Node* program(string q);
+Node* program(queue <Token>* q);
 Node* stmt_seq(queue<Token>* q);
 Node* statement(queue<Token>* q);
 Node* if_stmt(queue<Token>* q);

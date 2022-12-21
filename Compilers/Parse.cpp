@@ -2,8 +2,7 @@
 #include "Tree.h"
 #include "Scan.h"
 
-Node* program(string input) {
-    queue<Token>* q = scanning(input);
+Node* program( queue<Token>* q) {
     Token Program;
     Program.type = "program";
     Program.value = "program";
