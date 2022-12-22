@@ -2,11 +2,6 @@
 #include "ui_mainwindow.h"
 #include <QMessageBox>
 #include <QPixmap>
-#include <string>
-#include "Parse.h"
-#include "Scan.h"
-#include "Tree.h"
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -20,6 +15,11 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+#include <cstring>
+#include <string>
+#include "Parse.h"
+#include "Scan.h"
+#include "Tree.h"
 
 void MainWindow::on_actionNew_triggered()
 {
@@ -109,13 +109,29 @@ void MainWindow::on_actionOpen_triggered()
         return;
 
     }
+
     QTextStream in(&file);
     QString text=in.readAll();
     ui->input->setPlainText(text);
     file.close();
 
-}
 
+}
+queue<Token> result;
+queue<Token> scanner;
+string output = "";
+void scan()
+{
+    while (!(scanner.empty())) {
+
+        output += scanner.front().type + "\t" + scanner.front().value + "\n";
+
+        scanner.pop();
+
+
+    }
+
+}
 
 void MainWindow::on_resetButton_clicked()
 {
@@ -123,20 +139,26 @@ void MainWindow::on_resetButton_clicked()
     ui->output->clear();
     ui->tree->clear();
 }
+bool flag = false;
 
- string output="";
 void MainWindow::on_scanButton_clicked()
-
 {
-     ui->output->clear();
-    string input = ui->input->toPlainText().toStdString();
-    queue<Token>* result = scanning(input);
-    string output="";
-    while (!(result->empty())) {
-           output += result->front().type + "\t" + result->front().value + "\n";
-           result->pop();
+   ui->output->clear();
+   string input="";
+   output = "";
+   input= ui->input->toPlainText().toStdString();
 
-       }
+
+    scanner = scanning(input);
+
+    while (!(scanner.empty())) {
+
+        output += scanner.front().type + "\t" + scanner.front().value + "\n";
+
+        scanner.pop();
+
+
+    }
     ui->output->setPlainText(QString::fromStdString(output));
     output ="";
 }
@@ -144,17 +166,25 @@ void MainWindow::on_scanButton_clicked()
 
 void MainWindow::on_parseButton_clicked()
 {
-    string input = ui->input->toPlainText().toStdString();
-    queue<Token>* result = scanning(input);
 
-    if (!result->empty() && result->front().type == "Error") {
+    string input = ui->input->toPlainText().toStdString();
+    //scan(input);
+    flag = true;
+    result = scanning(input);
+
+    scanner = result;
+    output ="";
+    if (!result.empty() && result.front().type == "Error") {
         QMessageBox::warning(this,"Error","Syntax Error");
+        flag = true;
         return;
 
     }
 
-    Node* root = program(result);
-        if(root->child.size()){
+
+    Node* root = program(&result);
+
+    if(root->child.size()){
             draw(root);
             QString path = QDir::currentPath()+"/parse_tree.png";
             QByteArray ba = path.toLocal8Bit();
@@ -163,12 +193,16 @@ void MainWindow::on_parseButton_clicked()
             ui->tree->setPixmap(*myPixMap);
             ui->tree->setScaledContents(true);
             ui->tree->show();
+            scan();
+            ui->output->setPlainText(QString::fromStdString(output));
+
             delete root;
+
 
         }
         else{
             QMessageBox::warning(this,"Error","Syntax Error");
-
+            flag = true;
             delete root;
         }
     }

@@ -5,6 +5,7 @@
 #include <fstream>
 #include <map>
 #include <queue>
+#include <string.h>
 
 using namespace std;
 
@@ -15,9 +16,9 @@ struct Token
     int id;
 };
 
-queue<Token>* scanning(string& in_string);
+queue<Token> scanning(string in_string);
 
 
-string convert_file_to_string(string& str, string fileName);
+void convert_file_to_string(string& str, string fileName);
 
 void outputFile(queue<Token> s);

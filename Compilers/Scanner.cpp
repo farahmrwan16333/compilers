@@ -41,24 +41,28 @@ void addToken(string& scanned_character, string tokenValue)
 }
 
 /* Convert the string to tokens */
-queue<Token>* scanning(string &in_string) {
+queue<Token> scanning(string in_string) {
+    while(!scanned.empty())
+    {
+        scanned.pop();
+    }
     string scanned_character = "";
-
-
-    for (int i = 0; i < in_string.length(); i++) {
+    string test=in_string;
+    in_string = "";
+    for (int i = 0; i < test.length(); i++) {
 
         /* check if the characters of the string is an alphabetic letter */
-        if (isalpha(in_string[i])) {
+        if (isalpha(test[i])) {
 
-            while (isalpha(in_string[i])) {
-                scanned_character += in_string[i];
+            while (isalpha(test[i])) {
+                scanned_character += test[i];
                 i++;
                 if (!reservedWords(scanned_character).empty()) {
                     token.type = reservedWords(scanned_character);
                     break;
                 }
 
-                if (!isalpha(in_string[i])) {
+                if (!isalpha(test[i])) {
                     token.type = "IDENTIFIER";
                     break;
                 }
@@ -70,79 +74,81 @@ queue<Token>* scanning(string &in_string) {
             scanned.push(token);
         }
             /* Check if the character of the string is a number */
-        else if (isdigit(in_string[i])) {
-            while (isdigit(in_string[i])) {
-                scanned_character += in_string[i];
+        else if (isdigit(test[i])) {
+            while (isdigit(test[i])) {
+                scanned_character += test[i];
                 i++;
             }
             i--;
             addToken(scanned_character, "NUMBER");
 
         }
-        else if (isspace(in_string[i])) {
+        else if (isspace(test[i])) {
             continue;
         }
             /* Check Comments */
-        else if (in_string[i] == '{') {
-            while (in_string[i] != '}') {
+        else if (test[i] == '{') {
+            while (test[i] != '}') {
                 i++;
             }
         }
             /* Check assignment of value */
-        else if (in_string[i] == ':' && in_string[i + 1] == '=') {
+        else if (test[i] == ':' && test[i + 1] == '=') {
             token.value = ":=";
             token.type = "ASSIGN";
             scanned.push(token);
             i++;
         }
             /* Check if the character of the string is any arithmetic operation */
-        else if (in_string[i] == '+') {
-            scanned_character += in_string[i];
+        else if (test[i] == '+') {
+            scanned_character += test[i];
             addToken(scanned_character, "PLUS");
         }
-        else if (in_string[i] == '-') {
-            scanned_character += in_string[i];
+        else if (test[i] == '-') {
+            scanned_character += test[i];
             addToken(scanned_character, "MINUS");
         }
-        else if (in_string[i] == '/') {
-            scanned_character += in_string[i];
+        else if (test[i] == '/') {
+            scanned_character += test[i];
             addToken(scanned_character, "DIV");
 
         }
-        else if (in_string[i] == '*') {
-            scanned_character += in_string[i];
+        else if (test[i] == '*') {
+            scanned_character += test[i];
             addToken(scanned_character, "MULT");
 
         }
-        else if (in_string[i] == '=') {
-            scanned_character += in_string[i];
+        else if (test[i] == '=') {
+            scanned_character += test[i];
             addToken(scanned_character, "EQUAL");
 
         }
-        else if (in_string[i] == '<') {
-            scanned_character += in_string[i];
+        else if (test[i] == '<') {
+            scanned_character += test[i];
             addToken(scanned_character, "LESSTHAN");
 
         }
             /* Check brackets */
-        else if (in_string[i] == '(') {
-            scanned_character += in_string[i];
+        else if (test[i] == '(') {
+            scanned_character += test[i];
             addToken(scanned_character, "OPENBRACKET");
 
         }
-        else if (in_string[i] == ')') {
-            scanned_character += in_string[i];
+        else if (test[i] == ')') {
+            scanned_character += test[i];
             addToken(scanned_character, "CLOSEDBRACKET");
 
         }
             /* Check semicolon */
-        else if (in_string[i] == ';') {
-            scanned_character += in_string[i];
+        else if (test[i] == ';') {
+            scanned_character += test[i];
             addToken(scanned_character, "SEMICOLON");
 
         }
     }
-    return &scanned;
+    test = "";
+    scanned_character = "";
+    return scanned;
 }
 
 
